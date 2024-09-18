@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { createHmac, randomBytes } from 'crypto'
 import { createTokenForUser } from "../services/authentication.js";
 
-const avatarUrl = 'https://as1.ftcdn.net/v2/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg'
+const avatarUrl = 'https://img.freepik.com/premium-photo/lego-figure-boy-wearing-glasses-jacket-with-hoodie-it_113255-92731.jpg?size=626&ext=jpg'
 
 const userSchema = new mongoose.Schema({
     fullName: {
