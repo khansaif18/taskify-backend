@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const secretKey = process.env.JWT_SECRET_KEY
-// const secretKey = '@Noob6900'
 
 export const createTokenForUser = (user) => {
     const payload = {

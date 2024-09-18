@@ -1,6 +1,9 @@
 import { validateToken } from "../services/authentication.js"
 
-const secretKey = '@Noob6900'
+import dotenv from 'dotenv'
+dotenv.config()
+
+const secretKey = process.env.JWT_SECRET_KEY
 
 export const checkForAuthenticationCookie = (cookieName) => {
     return (req, res, next) => {
