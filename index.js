@@ -12,9 +12,9 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT
 
-mongoose.connect(process.env.MONGO_LOCAL_SERVER)
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB Connected'))
-    .catch(() => console.log('MongoDB Connection Error'));
+    .catch((err) => console.log('MongoDB Connection Error', err));
 
 
 // Middlewares
