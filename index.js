@@ -12,16 +12,17 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_LOCAL_SERVER)
     .then(() => console.log('MongoDB Connected'))
     .catch((err) => console.log('MongoDB Connection Error', err));
 
 
 // Middlewares
 app.use(cors({
-    origin: 'http://localhost:5173/',
+    origin: 'https://linktrim-saif.vercel.app',
     credentials: true
 }));
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
