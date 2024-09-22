@@ -19,9 +19,9 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Middlewares
 app.use(cors({
-    origin: 'https://linktrim-saif.vercel.app',
-    credentials: true
+    origin: '*',
 }));
+
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
