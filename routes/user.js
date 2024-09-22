@@ -13,32 +13,27 @@ userRoute.post('/signup', async (req, res) => {
             password
         })
         const token = createTokenForUser(newUser)
-        return res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'None',
-            domain: 'linktrim-saif.vercel.app'
-        }).json({ status: 'successful', user: newUser })
+        return res.cookie('token', token, { domain: 'linktrim-saif.vercel.app' }).json({ status: 'successful', user: newUser, token: token })
     } catch (error) {
         console.log('signup error', error);
         return res.json({ error: "some error occured" })
     }
 })
 
+// , {
+//     httpOnly: true,
+//     secure: true,
+//     sameSite: 'None',
+//     // domain: 'linktrim-saif.vercel.app'
+// }
+
 userRoute.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const token = await User.matchPasswordAndCreateToken(email, password);
 
-        return res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'None',
-            domain: 'linktrim-saif.vercel.app'
-        }).json({ status: 'Signed In Successfully' });;
-
+        return res.cookie('token', token).json({ status: 'Signed In Successfully' });;
         // Return success response
-        return res.status(200).json({ status: 'Signed In Successfully' });
     } catch (error) {
         console.error('Error in login:', error.message);
         return res.status(401).json({ error: error.message });
