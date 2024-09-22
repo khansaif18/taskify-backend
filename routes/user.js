@@ -13,7 +13,7 @@ userRoute.post('/signup', async (req, res) => {
             password
         })
         const token = createTokenForUser(newUser)
-        return res.cookie('token', token, { domain: 'linktrim-saif.vercel.app' }).json({ status: 'successful', user: newUser, token: token })
+        return res.cookie('token', token).json({ status: 'successful', user: newUser, token: token })
     } catch (error) {
         console.log('signup error', error);
         return res.json({ error: "some error occured" })
