@@ -19,7 +19,14 @@ userRoute.post('/signup', async (req, res) => {
                 password
             })
             const token = createTokenForUser(newUser)
-            return res.cookie('token', token, { sameSite: 'none', domain: 'https://linktrim-saif.vercel.app/signup' }).json({ status: 'successful', user: newUser })
+            return res.cookie('token', token, {
+                sameSite: 'none',
+                secure: true, // Ensure this is true when using HTTPS
+                httpOnly: true, // This will make sure the cookie is only accessible via HTTP(S)
+                domain: '.vercel.app', // Use a domain pattern that works for subdomains
+                path: '/', // Make the cookie available across your entire app
+            }).json({ status: 'successful', user: newUser })
+
         }
 
     } catch (error) {
@@ -33,7 +40,16 @@ userRoute.post('/login', async (req, res) => {
     try {
         const token = await User.matchPasswordAndCreateToken(email, password);
 
-        return res.cookie('token', token, { sameSite: 'none', domain: 'https://linktrim-saif.vercel.app/login' }).json({ status: 'Signed In Successfully' });;
+        // return res.cookie('token', token, { sameSite: 'none', domain: 'https://linktrim-saif.vercel.app/login' }).json({ status: 'Signed In Successfully' });;
+
+        return res.cookie('token', token, {
+            sameSite: 'none',
+            secure: true, // Ensure this is true when using HTTPS
+            httpOnly: true, // This will make sure the cookie is only accessible via HTTP(S)
+            domain: '.vercel.app', // Use a domain pattern that works for subdomains
+            path: '/', // Make the cookie available across your entire app
+        }).json({ status: 'successful', user: newUser })
+
 
     } catch (error) {
         console.error('Error in login:', error.message);
