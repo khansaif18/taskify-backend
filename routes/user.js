@@ -23,7 +23,7 @@ userRoute.post('/signup', async (req, res) => {
                 sameSite: 'none',
                 secure: true, 
                 httpOnly: true, 
-                domain: '.vercel.app', 
+                domain: 'linktrim-saif.vercel.app',
                 path: '/', 
             }).json({ status: 'successful', user: newUser })
 
@@ -44,7 +44,7 @@ userRoute.post('/login', async (req, res) => {
             sameSite: 'none',
             secure: true,
             httpOnly: true, 
-            domain: '.vercel.app', 
+            domain: 'linktrim-saif.vercel.app', 
             path: '/', 
         }).json({ status: 'successful' })
 
