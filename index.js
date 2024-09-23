@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
     
 app.use(cors({
-    origin: 'https://linktrim-saif.vercel.app/',
+    origin: 'https://linktrim-saif.vercel.app',
     credentials: true
 }))
 
