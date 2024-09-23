@@ -19,7 +19,7 @@ userRoute.post('/signup', async (req, res) => {
                 password
             })
             const token = createTokenForUser(newUser)
-            return res.cookie('token', token, { sameSite: 'none' }).json({ status: 'successful', user: newUser })
+            return res.cookie('token', token, { sameSite: 'none', domain: 'https://linktrim-saif.vercel.app' }).json({ status: 'successful', user: newUser })
         }
 
     } catch (error) {
@@ -33,7 +33,7 @@ userRoute.post('/login', async (req, res) => {
     try {
         const token = await User.matchPasswordAndCreateToken(email, password);
 
-        return res.cookie('token', token, { sameSite: 'none' }).json({ status: 'Signed In Successfully' });;
+        return res.cookie('token', token, { sameSite: 'none', domain: 'https://linktrim-saif.vercel.app' }).json({ status: 'Signed In Successfully' });;
 
     } catch (error) {
         console.error('Error in login:', error.message);
