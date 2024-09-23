@@ -1,12 +1,9 @@
-import express from 'express'
 import mongoose from 'mongoose'
-import cors from 'cors'
-import { userRoute } from './routes/user.js';
-import { urlRoute } from './routes/url.js';
-import cookieParser from 'cookie-parser';
-import { checkForAuthenticationCookie } from './middlewares/authentication.js';
+import express from 'express'
 import dotenv from 'dotenv'
-import { shortRoute } from './routes/short.js';
+import cors from 'cors'
+import { urlRoute } from './routes/url.js';
+import { redirectToShortUrl} from './redirect.js';
 
 dotenv.config()
 const app = express()
@@ -16,26 +13,27 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch((err) => console.log('MongoDB Connection Error', err));
 
-
-// Middlewares
+    
 app.use(cors({
-    origin: 'https://linktrim-saif.vercel.app',
+    origin: 'https://linktrim-saif.vercel.app/',
     credentials: true
-}));
-
+}))
 
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(cookieParser())
 
-app.use('/short', shortRoute)
-app.use('/api/v1/user', userRoute)
-app.use('/api/v1/url', checkForAuthenticationCookie('token'), urlRoute)
+
+app.use('/api/v1/url', urlRoute)
+
+
+app.get('/:shortId', redirectToShortUrl)
+
 
 app.get('/', (req, res) => {
     res.json({ status: 'Server is running' })
 })
+
 
 app.listen(PORT, () => {
     console.log(`Server is Runnig at Port : http://localhost:${PORT}`);

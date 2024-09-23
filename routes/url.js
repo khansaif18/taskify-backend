@@ -26,47 +26,6 @@ urlRoute.post('/', async (req, res) => {
     }
 })
 
-// handleRedirectUsingShortId
-
-// urlRoute.get('/:shortId', async (req, res) => {
-//     const shortId = req.params.shortId;
-//     const date = new Date();
-
-//     try {
-//         const entry = await Url.findOneAndUpdate(
-//             { shortId },
-//             {
-//                 $push: {
-//                     visitHistory: {
-//                         timestamp: date.toISOString() // Use ISO format for consistency
-//                     }
-//                 }
-//             },
-//             { new: true } // Return the updated document
-//         );
-
-//         if (!entry) {
-//             return res.status(404).json({ error: 'Short URL not found' }); // Handle if entry is not found
-//         }
-
-//         res.redirect(entry.redirectUrl);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Could not redirect, try again' });
-//     }
-// })
-
-// handleGetUrlUsingId
-
-urlRoute.get('/analytics/:id', async (req, res) => {
-    const id = req.params.id
-    try {
-        const url = await Url.findById(id)
-        if (!url) return res.status(404).json({ error: 'url not found' })
-        return res.json(url)
-    } catch (error) {
-        return res.json({ error: 'some error occured ', error })
-    }
-})
 
 // handlegetUrlsCreatedbyUser
 
@@ -79,5 +38,18 @@ urlRoute.get('/user-url/:id', async (req, res) => {
     } catch (error) {
         console.log('Error finding user url : ', error);
         return res.status(404).json({ status: 'Some error occured' })
+    }
+})
+
+// handleDeleteUrlByUser
+
+urlRoute.delete('/delete/:id', async (req, res) => {
+    const id = req.params.id
+    if (!id) return res.status(401).json({ error: 'id is required' })
+    try {
+        await Url.findByIdAndDelete(id)
+        return res.status(201).json({ status: 'url deleted successfully' })
+    } catch (error) {
+        return res.status(404).json({ error: 'Some error occured, could not delete url' })
     }
 })
