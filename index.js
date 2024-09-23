@@ -19,7 +19,8 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Middlewares
 app.use(cors({
-    origin: '*',
+    origin: 'https://linktrim-saif.vercel.app/',
+    credentials: true
 }));
 
 
@@ -31,8 +32,8 @@ app.use('/short', shortRoute)
 app.use('/api/v1/user', userRoute)
 app.use('/api/v1/url', checkForAuthenticationCookie('token'), urlRoute)
 
-app.get('/api', (req, res) => {
-    res.json({ status: 'done scene hai' })
+app.get('/', (req, res) => {
+    res.json({ status: 'Server is running' })
 })
 
 app.listen(PORT, () => {

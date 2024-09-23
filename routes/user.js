@@ -7,25 +7,26 @@ export const userRoute = Router()
 userRoute.post('/signup', async (req, res) => {
     const { fullName, email, password } = req.body
     try {
-        const newUser = await User.create({
-            fullName,
-            email,
-            password
-        })
-        const token = createTokenForUser(newUser)
-        return res.cookie('token', token).json({ status: 'successful', user: newUser, token: token })
+        const ifEmailExists = await User.findOne({ email: email })
+
+        if (ifEmailExists) {
+            return res.json({ error: "email already exists" })
+
+        } else {
+            const newUser = await User.create({
+                fullName,
+                email,
+                password
+            })
+            const token = createTokenForUser(newUser)
+            return res.cookie('token', token).json({ status: 'successful', user: newUser })
+        }
+
     } catch (error) {
         console.log('signup error', error);
         return res.json({ error: "some error occured" })
     }
 })
-
-// , {
-//     httpOnly: true,
-//     secure: true,
-//     sameSite: 'None',
-//     // domain: 'linktrim-saif.vercel.app'
-// }
 
 userRoute.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -33,7 +34,7 @@ userRoute.post('/login', async (req, res) => {
         const token = await User.matchPasswordAndCreateToken(email, password);
 
         return res.cookie('token', token).json({ status: 'Signed In Successfully' });;
-        // Return success response
+
     } catch (error) {
         console.error('Error in login:', error.message);
         return res.status(401).json({ error: error.message });
