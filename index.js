@@ -1,26 +1,41 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import taskRouter from './route/task.js'
-import cors from 'cors'
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import taskRouter from './route/task.js';
+import cors from 'cors';
 
-dotenv.config()
+dotenv.config();  // Load environment variables from .env
 
-const app = express()
-const PORT = process.env.PORT
+const app = express();
+const PORT = process.env.PORT || 5000;  // Default to port 5000 if PORT is not defined
 
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log('MongoDB Connection Error : ', err))
-
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-app.use(cors())
-
-app.use('/api/v1/task', taskRouter)
-
-app.get('/', (req, res) => {
-    res.json({ status: 'Yes, Getting!' })
+// MongoDB Connection with Mongoose
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log('MongoDB Connection Error: ', err));
 
-app.listen(PORT, () => console.log('Yes, Listening on : ', PORT))
+// Middleware
+app.use(express.urlencoded({ extended: false }));  // Parse URL-encoded data
+app.use(express.json());  // Parse JSON data
+app.use(cors());  // Enable CORS
+
+// Define your API routes
+app.use('/api/v1/task', taskRouter);
+
+// Handle base route
+app.get('/', (req, res) => {
+  res.json({ status: 'Yes, API is working!' });
+});
+
+// Error handling middleware for undefined routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
