@@ -3,39 +3,49 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import taskRouter from './route/task.js';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
-dotenv.config();  // Load environment variables from .env
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;  // Default to port 5000 if PORT is not defined
+const PORT = process.env.PORT || 5000;
 
-// MongoDB Connection with Mongoose
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log('MongoDB Connection Error: ', err));
 
-// Middleware
-app.use(express.urlencoded({ extended: false }));  // Parse URL-encoded data
-app.use(express.json());  // Parse JSON data
-app.use(cors());  // Enable CORS
 
-// Define your API routes
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests, please try again after 15 minutes'
+});
+
+app.use(limiter);
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cors({
+  origin: 'https://taskify-main.vercel.app'
+}));
+
+
 app.use('/api/v1/task', taskRouter);
 
-// Handle base route
+
 app.get('/', (req, res) => {
   res.json({ status: 'Yes, API is working!' });
 });
 
-// Error handling middleware for undefined routes
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
 });
 
-// Start the server
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
