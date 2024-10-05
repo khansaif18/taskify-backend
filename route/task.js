@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { Task } from "../model/task.js";
-import { checkUidInBody, checkUidInHeader, getTimeAndDate } from "../middleware/checkUid.js";
+import { checkUidInBody, checkUidInHeader, getTimeAndDate, taskLimiter } from "../middleware/index.js";
+
 
 const taskRouter = Router()
-
 
 // Route to get tasks created by user 
 taskRouter.get('/user-tasks/:createdBy', checkUidInHeader, async (req, res) => {
@@ -107,6 +107,23 @@ taskRouter.delete('/delete/:id', checkUidInHeader, async (req, res) => {
         return res.status(401).json({ error: 'Id is Required' })
     }
 })
+
+// Route to find a task using id without authentication
+
+// taskRouter.get('/:id', taskLimiter, async (req, res) => {
+//     const id = req.params.id;
+//     try {
+//         const task = await Task.findById(id);
+//         if (task) {
+//             res.status(200).json(task);
+//         } else {
+//             res.status(404).json({ error: 'Could not find task' });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ error: 'Some error occurred, could not find task' });
+//         console.log('Error:', error);
+//     }
+// });
 
 // Route to list all task (for testings) 
 // taskRouter.get('/',  async (req, res) => {

@@ -1,3 +1,5 @@
+import rateLimit from 'express-rate-limit';
+
 
 export const checkUidInHeader = (req, res, next) => {
     const uid = req.headers.authorization?.split('Bearer ')[1];
@@ -27,27 +29,22 @@ export const checkUidInBody = (req, res, next) => {
 
 
 export const getTimeAndDate = () => {
+    let date = new Date();
 
-    let date = new Date()
+    let options = { timeZone: 'Asia/Kolkata', hour12: true };
+    let dateString = date.toLocaleString('en-GB', options).split(', ');
+    let [dayMonthYear, time] = dateString;
 
-    let day = date.getDate()
-    day = day < 10 ? '0' + day : day
+    return `${dayMonthYear}, ${time}`;
+};
 
-    let month = date.getMonth() + 1
-    month = month < 10 ? '0' + month : month
 
-    let year = date.getFullYear()
+export const taskLimiter = rateLimit({
+    windowMs: 30 * 60 * 1000,
+    max: 50,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests, please try again after 30 minutes'
+});
 
-    let hour = date.getHours()
-    hour = hour < 10 ? '0' + hour : hour
 
-    let minute = date.getMinutes()
-    minute = minute < 10 ? '0' + minute : minute
-
-    let second = date.getSeconds()
-    second = second < 10 ? '0' + second : second
-
-    let dateAndTime = `${day}/${month}/${year}, ${hour}:${minute}:${second}`.toString()
-
-    return dateAndTime
-}

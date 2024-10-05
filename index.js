@@ -29,6 +29,7 @@ app.use(limiter);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
+  // origin: 'http://localhost:5173'
   origin: 'https://taskify-main.vercel.app'
 }));
 
@@ -42,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+  res.status(404).json({ error: 'Oops! Not Found' });
 });
 
 
